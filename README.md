@@ -30,7 +30,7 @@ Swalang is a high-level dynamically typed programming language
 ### Data Types
 
 #### 1. Boolean
-Swalang uses ```ukweli``` and ```uwongo``` which are Swahili worlds that translates to ```true``` and ```false``` respectively in English.
+Swalang uses ```ukweli``` and ```uwongo``` which are Swahili words that translate to ```true``` and ```false``` respectively in English.
 
 ```text
 ukweli; //true

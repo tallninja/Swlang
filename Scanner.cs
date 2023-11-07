@@ -1,4 +1,4 @@
-namespace Swalang;
+namespace Swlang;
 using static TokenType;
 
 /// <summary>

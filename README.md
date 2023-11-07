@@ -1,16 +1,16 @@
-# Swalang
+# Swlang
 
 A swahili based programming language
 
 ## Introduction
 
-Swalang is just another programming language that uses swahili keywords and actions.
+Swlang is just another programming language that uses swahili keywords and actions.
 This is just a fun side project that will help anyone understand the inner workings of compilers and interpreters
 
 ## How it Works!
 
 ```text
-// This is my first swalang program
+// This is my first swlang program
 sema("Habari, Dunia!");
 ```
 Translation
@@ -21,16 +21,16 @@ Translation
 
 ### Features
 
-Swalang is a high-level dynamically typed programming language
+Swlang is a high-level dynamically typed programming language
 
 1. **Dynamic Typing** - Variables can store values of any type, and a single
    variable can even store values of different types at different times.
-2. **Automatic Memory Management** - Swalang uses a Garbage Collector (GC) for memory management. Therefore there is no need to stress yourself with memory leaks, the GC will take care of that for you
+2. **Automatic Memory Management** - Swlang uses a Garbage Collector (GC) for memory management. Therefore there is no need to stress yourself with memory leaks, the GC will take care of that for you
 
 ### Data Types
 
 #### 1. Boolean
-Swalang uses ```ukweli``` and ```uwongo``` which are Swahili words that translate to ```true``` and ```false``` respectively in English.
+Swlang uses ```ukweli``` and ```uwongo``` which are Swahili words that translate to ```true``` and ```false``` respectively in English.
 
 ```text
 ukweli; //true
@@ -39,7 +39,7 @@ uwongo; //false
 
 #### 2. Numbers
 
-Swalang only features double-precision floating point numbers since they can represent a wide range of integers that covers a lot of teritory while keeping things simple.
+Swlang only features double-precision floating point numbers since they can represent a wide range of integers that covers a lot of teritory while keeping things simple.
 
 ```text
 12; //integer
@@ -61,11 +61,11 @@ String literals are enclosed in double quotes.
 
 ### Expressions
 
-There are various expressions supported in Swalang
+There are various expressions supported in Swlang
 
 #### 1. Arithmetic
 
-Swalang features the basic arithmetic expressions from other popular language.
+Swlang features the basic arithmetic expressions from other popular language.
 
 ```text
 1 + 2; //addition - kujumuisha
@@ -110,7 +110,7 @@ chombo jumla = (1 + 2) * 4;
 
 #### 5. Statements
 
-In Swalang statements are followed by a semi-colon to indicate the end of the statement;
+In Swlang statements are followed by a semi-colon to indicate the end of the statement;
 
 ```text
 sema("Habari, Dunia!");
@@ -182,7 +182,7 @@ tendo jumuisha(a, b) {
 }
 ```
 
-Functions are first class in Swalang meaning they are real values that you can get a reference to, store in variables, pass around etc.
+Functions are first class in Swlang meaning they are real values that you can get a reference to, store in variables, pass around etc.
 
 ```text
 tendo jumuisha(a, b) {
@@ -198,7 +198,7 @@ sema(tokeo(jumuisha)(1, 2)); // "3"
 
 #### 9. Classes
 
-Swalang is an object-oriented language featuring classes, inheritance, polymorphism etc. To create classes use the keyword ```ramani``` which is the swahili word for ```blueprint```. The reason I chose this name is because I think of classes as blueprints for an object with its properties and behaviours.
+Swlang is an object-oriented language featuring classes, inheritance, polymorphism etc. To create classes use the keyword ```ramani``` which is the swahili word for ```blueprint```. The reason I chose this name is because I think of classes as blueprints for an object with its properties and behaviours.
 
 ```text
 ramani Mnyama {
@@ -219,7 +219,7 @@ ndovu.jina = "Ndovu";
 ndovu.miaka = 20;
 ```
 
-Swalang also supports inheritance.
+Swlang also supports inheritance.
 
 ```text
 ramani Ndege hurithi Mnyama {

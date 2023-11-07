@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Swalang;
+namespace Swlang;
 
 class Program
 {

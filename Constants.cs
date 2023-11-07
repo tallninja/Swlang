@@ -1,4 +1,4 @@
-namespace Swalang;
+namespace Swlang;
 
 public abstract class Constants
 {

@@ -11,12 +11,12 @@ This is just a fun side project that will help anyone understand the inner worki
 
 ```text
 // This is my first swlang program
-sema("Habari, Dunia!");
+sema("Salamu, Dunia!");
 ```
 Translation
 
 - sema -> say
-- Habari -> Hello
+- Salamu -> Hello
 - Dunia -> World
 
 ### Features
@@ -51,7 +51,7 @@ Swlang only features double-precision floating point numbers since they can repr
 String literals are enclosed in double quotes.
 
 ```text
-"Habari, Dunia!"; // string literal
+"Salamu, Dunia!"; // string literal
 "J"; // character
 ```
 
@@ -113,7 +113,7 @@ chombo jumla = (1 + 2) * 4;
 In Swlang statements are followed by a semi-colon to indicate the end of the statement;
 
 ```text
-sema("Habari, Dunia!");
+sema("Salamu, Dunia!");
 ```
 
 You can also use curly braces ```{}``` to wrap your statements/expressions in a code block
@@ -121,7 +121,7 @@ You can also use curly braces ```{}``` to wrap your statements/expressions in a 
 ```text
 {
    chombo c = a + b;
-   sema("Habari, Dunia");
+   sema("Salamu, Dunia");
 }
 ```
 

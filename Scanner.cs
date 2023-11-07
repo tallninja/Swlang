@@ -1,4 +1,5 @@
 namespace Swalang;
+using static TokenType;
 
 /// <summary>
 /// This class is used to scan through the source code
@@ -65,18 +66,30 @@ public class Scanner
         var c = Advance();
         switch(c)
         {
-            case '(': AddToken(TokenType.L_PAREN); break;
-            case ')': AddToken(TokenType.R_PAREN); break;
-            case '{': AddToken(TokenType.L_CURLY); break;
-            case '}': AddToken(TokenType.R_CURLY); break;
-            case '[': AddToken(TokenType.R_SQUARE); break;
-            case ']': AddToken(TokenType.R_SQUARE); break;
-            case '.': AddToken(TokenType.DOT); break;
-            case ',': AddToken(TokenType.COMMA); break;
-            case '+': AddToken(TokenType.PLUS); break;
-            case '-': AddToken(TokenType.MINUS); break;
-            case '*': AddToken(TokenType.STAR); break;
-            case ';': AddToken(TokenType.SEMICOLON); break;
+            case '(': AddToken(L_PAREN); break;
+            case ')': AddToken(R_PAREN); break;
+            case '{': AddToken(L_CURLY); break;
+            case '}': AddToken(R_CURLY); break;
+            case '[': AddToken(R_SQUARE); break;
+            case ']': AddToken(R_SQUARE); break;
+            case '.': AddToken(DOT); break;
+            case ',': AddToken(COMMA); break;
+            case '+': AddToken(PLUS); break;
+            case '-': AddToken(MINUS); break;
+            case '*': AddToken(STAR); break;
+            case ';': AddToken(SEMICOLON); break;
+            case '=':
+                AddToken(Match('=') ? EQUAL_EQUAL : EQUAL);
+                break;
+            case '!':
+                AddToken(Match('=') ? BANG_EQUAL : BANG);
+                break;
+            case '>':
+                AddToken(Match('=') ? GREATER_EQUAL : GREATER);
+                break;
+            case '<':
+                AddToken(Match('=') ? LESS_EQUAL : LESS);
+                break;
             default:
                 Program.Error(_line, "Unexpected character.");
                 break;
@@ -103,6 +116,23 @@ public class Scanner
     {
         var lexeme = _source.Substring(_start, _current - _start);
         _tokens.Add(new Token(type, lexeme, literal, _line));
+    }
+
+    /// <summary>
+    /// Used to scan double character tokens.
+    /// if the next character matches then it increments the current pointer
+    /// </summary>
+    /// <param name="expected">The expected character</param>
+    /// <returns>
+    /// True if current character matches the expected character.
+    /// Returns False otherwise
+    /// </returns>
+    private bool Match(char expected)
+    {
+        if (IsAtEnd()) return false;
+        if (_source[_current] != expected) return false;
+        _current += 1;
+        return true;
     }
 
     /// <summary>

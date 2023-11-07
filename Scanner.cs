@@ -90,19 +90,24 @@ public class Scanner
             case '<':
                 AddToken(Match('=') ? LESS_EQUAL : LESS);
                 break;
+            case '/':
+                if (Match('/')) // ignore comments. proceed to the end of the comment
+                    while (Peek() != '\n' && !IsAtEnd()) Advance();
+                else
+                    AddToken(F_SLASH);
+                break;
+            // ignore whitespace
+            case ' ':
+            case '\t':
+            case '\r':
+                break;
+            case '\n':
+                _line += 1;
+                break;
             default:
                 Program.Error(_line, "Unexpected character.");
                 break;
         }
-    }
-
-    /// <summary>
-    /// Adds a token with a null string literal to the list of tokens
-    /// </summary>
-    /// <param name="type">The type of token <see cref="TokenType"/></param>
-    private void AddToken(TokenType type)
-    {
-        AddToken(type, null);
     }
 
     /// <summary>
@@ -112,10 +117,15 @@ public class Scanner
     /// <param name="literal">
     /// The literal value of the token. The value is nullable
     /// </param>
-    private void AddToken(TokenType type, string? literal)
+    private void AddToken(TokenType type, string? literal = null)
     {
         var lexeme = _source.Substring(_start, _current - _start);
         _tokens.Add(new Token(type, lexeme, literal, _line));
+    }
+
+    private char Peek()
+    {
+        return IsAtEnd() ? '\0' : _source[_current];
     }
 
     /// <summary>

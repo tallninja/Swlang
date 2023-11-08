@@ -97,15 +97,12 @@ public class Scanner
                     AddToken(F_SLASH);
                 break;
             // ignore whitespace
-            case ' ':
-            case '\t':
-            case '\r':
-                break;
-            case '\n':
-                _line += 1;
-                break;
+            case ' ': case '\t': case '\r': break;
+            case '\n': _line += 1; break;
+            case '"': ParseStringToken(); break;
             default:
-                Program.Error(_line, "Unexpected character.");
+                if (IsDigit(Peek())) ParseNumberToken();
+                else Program.Error(_line, "Unexpected character.");
                 break;
         }
     }
@@ -117,15 +114,71 @@ public class Scanner
     /// <param name="literal">
     /// The literal value of the token. The value is nullable
     /// </param>
-    private void AddToken(TokenType type, string? literal = null)
+    private void AddToken(TokenType type, object? literal = null)
     {
         var lexeme = _source.Substring(_start, _current - _start);
         _tokens.Add(new Token(type, lexeme, literal, _line));
     }
 
+    /// <summary>
+    /// Parses a string token. Starts token parsing after encountering
+    /// the first " character. Throws an error if the string is unterminated.
+    /// It also supports multiline strings
+    /// </summary>
+    private void ParseStringToken()
+    {
+        while (Peek() != '"' && !IsAtEnd())
+        {
+            if (Peek() == '\n')
+                _line += 1;
+            Advance();
+        }
+
+        if (IsAtEnd())
+            Program.Error(_line, "Unterminated string.");
+
+        // proceed to the closing "
+        Advance();
+
+        // remove the surrounding quotes
+        var startIndex = _start + 1;
+        var endIndex = _current - 1;
+        var length = endIndex - startIndex;
+        var literalValue = _source.Substring(startIndex, length);
+        AddToken(STRING, literalValue);
+    }
+
+    /// <summary>
+    /// Parses a numeric token.
+    /// The token is parsed to a double by default
+    /// </summary>
+    private void ParseNumberToken()
+    {
+        while (IsDigit(Peek())) Advance();
+
+        // look for a decimal
+        if (Peek() == '.' && IsDigit(PeekNext()))
+        {
+            Advance();
+            while (IsDigit(Peek())) Advance();
+        }
+
+        var numericValue = _source.Substring(_start, _current - _start);
+        AddToken(NUMBER, double.Parse(numericValue));
+    }
+
+    /// <summary>
+    /// Used to look/peek at the next character.
+    /// </summary>
+    /// <returns>The next character. If at the end returns null terminator</returns>
     private char Peek()
     {
         return IsAtEnd() ? '\0' : _source[_current];
+    }
+
+    private char PeekNext()
+    {
+        return _current + 1 > _source.Length ? '\0' : _source[_current + 1];
     }
 
     /// <summary>
@@ -159,9 +212,40 @@ public class Scanner
     /// Checks to see if the current pointer is at the
     /// end of the source code
     /// </summary>
-    /// <returns>True if current is at the end and False otherwise</returns>
+    /// <returns>True if current is at the end. False otherwise</returns>
     private bool IsAtEnd()
     {
         return _current >= _source.Length;
     }
+
+    /// <summary>
+    /// Checks if a character is a digit
+    /// </summary>
+    /// <param name="c">character</param>
+    /// <returns>True if is a digit. False otherwise</returns>
+    private static bool IsDigit(char c)
+    {
+        return c is >= '0' and <= '9';
+    }
+
+    /// <summary>
+    /// Checks is a character is alphabetic
+    /// </summary>
+    /// <param name="c">character</param>
+    /// <returns>True if is alphabetic. False otherwise</returns>
+    private static bool IsAlpha(char c)
+    {
+        return c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or '_';
+    }
+
+    /// <summary>
+    /// Checks is a character is alphanumeric
+    /// </summary>
+    /// <param name="c">character</param>
+    /// <returns>True if is alphanumeric. False otherwise</returns>
+    private bool IsAlphaNum(char c)
+    {
+        return IsAlpha(c) || IsDigit(c);
+    }
+
 }

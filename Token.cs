@@ -12,10 +12,10 @@ public class Token
 {
     private readonly TokenType _type;
     private readonly string _lexeme;
-    private readonly string? _literal;
+    private readonly object? _literal;
     private readonly int _line;
 
-    public Token(TokenType type, string lexeme, string? literal, int line)
+    public Token(TokenType type, string lexeme, object? literal, int line)
     {
         _type = type;
         _lexeme = lexeme;
@@ -38,7 +38,7 @@ public class Token
     /// This is the literal value of the token.
     /// For example when defining or assigning a value to a variable
     /// </summary>
-    public string Literal => _literal ?? string.Empty;
+    public object? Literal => _literal;
 
     /// <summary>
     /// This is the line on the source file where the token is.

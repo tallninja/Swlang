@@ -170,7 +170,7 @@ public class Scanner
     }
 
     /// <summary>
-    /// Parses an identifier token.
+    /// Parses an identifier or a keyword token.
     /// For a token to pass as an identifier,
     /// it should start with an alphabetic letter or _.
     /// An identifier cannot start with a number or other characters
@@ -192,6 +192,10 @@ public class Scanner
         return IsAtEnd() ? '\0' : _source[_current];
     }
 
+    /// <summary>
+    /// Peeks at the next character after the current character pointer
+    /// </summary>
+    /// <returns>The character immediately after the current character</returns>
     private char PeekNext()
     {
         return _current + 1 > _source.Length ? '\0' : _source[_current + 1];

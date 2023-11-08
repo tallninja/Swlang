@@ -263,7 +263,7 @@ public class Lexer
     /// </summary>
     /// <param name="c">character</param>
     /// <returns>True if is alphanumeric. False otherwise</returns>
-    private bool IsAlphaNum(char c)
+    private static bool IsAlphaNum(char c)
     {
         return IsAlpha(c) || IsDigit(c);
     }

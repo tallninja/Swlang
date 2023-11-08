@@ -8,7 +8,7 @@ using static Constants;
 /// It appends an "end of file" (EOF) token at the end
 /// <see cref="Token"/>
 /// </summary>
-public class Scanner
+public class Lexer
 {
     /// <summary>
     /// This is a string representing the source code
@@ -36,7 +36,7 @@ public class Scanner
     /// </summary>
     private int _line = 1;
 
-    public Scanner(string source)
+    public Lexer(string source)
     {
         _source = source;
     }

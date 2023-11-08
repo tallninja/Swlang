@@ -25,7 +25,7 @@ class Program
         }
     }
 
-    public static void RunPrompt()
+    private static void RunPrompt()
     {
         while (true)
         {
@@ -37,7 +37,7 @@ class Program
         }
     }
 
-    public static void RunFile(string filePath)
+    private static void RunFile(string filePath)
     {
         try
         {
@@ -58,10 +58,10 @@ class Program
 
     }
 
-    public static void Run(string sourceCode)
+    private static void Run(string sourceCode)
     {
-        var scanner = new Scanner(sourceCode);
-        var tokens = scanner.Scan();
+        var lexer = new Lexer(sourceCode);
+        var tokens = lexer.Scan();
 
         foreach (var token in tokens)
         {

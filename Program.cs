@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using static Swlang.Constants;
 
 namespace Swlang;
 
@@ -18,7 +19,7 @@ class Program
                 RunFile(args[0]);
                 break;
             default:
-                _log.Info("Usage: swalang [script]");
+                _log.Info(Usage);
                 Environment.Exit(1);
                 break;
         }
@@ -28,7 +29,7 @@ class Program
     {
         while (true)
         {
-            Console.Write(Constants.Prompt);
+            Console.Write(Prompt);
             var line = Console.In.ReadLine();
             if (line is null) break;
             Run(line);

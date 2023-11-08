@@ -1,5 +1,6 @@
 namespace Swlang;
 using static TokenType;
+using static Constants;
 
 /// <summary>
 /// This class is used to scan through the source code
@@ -70,7 +71,7 @@ public class Scanner
             case ')': AddToken(R_PAREN); break;
             case '{': AddToken(L_CURLY); break;
             case '}': AddToken(R_CURLY); break;
-            case '[': AddToken(R_SQUARE); break;
+            case '[': AddToken(L_SQUARE); break;
             case ']': AddToken(R_SQUARE); break;
             case '.': AddToken(DOT); break;
             case ',': AddToken(COMMA); break;
@@ -101,7 +102,8 @@ public class Scanner
             case '\n': _line += 1; break;
             case '"': ParseStringToken(); break;
             default:
-                if (IsDigit(Peek())) ParseNumberToken();
+                if (IsDigit(c)) ParseNumberToken();
+                if (IsAlpha(c)) ParseIdentifierToken();
                 else Program.Error(_line, "Unexpected character.");
                 break;
         }
@@ -165,6 +167,20 @@ public class Scanner
 
         var numericValue = _source.Substring(_start, _current - _start);
         AddToken(NUMBER, double.Parse(numericValue));
+    }
+
+    /// <summary>
+    /// Parses an identifier token.
+    /// For a token to pass as an identifier,
+    /// it should start with an alphabetic letter or _.
+    /// An identifier cannot start with a number or other characters
+    /// </summary>
+    private void ParseIdentifierToken()
+    {
+        while (IsAlphaNum(Peek())) Advance();
+
+        var text = _source.Substring(_start, _current - _start);
+        AddToken(Keywords.TryGetValue(text, out var value) ? value : IDENTIFIER);
     }
 
     /// <summary>

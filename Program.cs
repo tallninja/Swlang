@@ -3,9 +3,9 @@ using static Swlang.Constants;
 
 namespace Swlang;
 
-class Program
+internal abstract class Program
 {
-    public static bool ErrorOccured;
+    private static bool _errorOccured;
     private static Logger _log = new();
 
     public static void Main(string[] args)
@@ -33,7 +33,7 @@ class Program
             var line = Console.In.ReadLine();
             if (line is null) break;
             Run(line);
-            ErrorOccured = false;
+            _errorOccured = false;
         }
     }
 
@@ -45,7 +45,7 @@ class Program
             var streamReader = new StreamReader(sourceFile, Encoding.UTF8);
             Run(streamReader.ReadToEnd());
 
-            if (ErrorOccured)
+            if (_errorOccured)
             {
                 Environment.Exit(65);
             }
@@ -77,7 +77,7 @@ class Program
     private static void ReportError(int line, string where, string message)
     {
         Console.Error.WriteLine($"[line {line}] Error {where} {message}");
-        ErrorOccured = true;
+        _errorOccured = true;
     }
 
 }

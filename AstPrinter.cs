@@ -24,7 +24,7 @@ public class AstPrinter : IExpressionVisitor<string>
 
     public string Visit(Literal expression)
     {
-        return expression.Value is null ? "tupu" : expression.Value.ToString();
+        return (expression.Value is null ? "tupu" : expression.Value.ToString()) ?? string.Empty;
     }
 
     public string Visit(Grouping expression)

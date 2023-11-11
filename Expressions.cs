@@ -48,7 +48,7 @@ public class Literal : Expression
         Value = value;
     }
     
-    public object Value { get; init; }
+    public object? Value { get; init; }
 
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {

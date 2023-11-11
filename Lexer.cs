@@ -79,23 +79,15 @@ public class Lexer
             case '-': AddToken(MINUS); break;
             case '*': AddToken(STAR); break;
             case ';': AddToken(SEMICOLON); break;
-            case '=':
-                AddToken(Match('=') ? EQUAL_EQUAL : EQUAL);
-                break;
-            case '!':
-                AddToken(Match('=') ? BANG_EQUAL : BANG);
-                break;
-            case '>':
-                AddToken(Match('=') ? GREATER_EQUAL : GREATER);
-                break;
-            case '<':
-                AddToken(Match('=') ? LESS_EQUAL : LESS);
-                break;
+            case '=': AddToken(Match('=') ? EQUAL_EQUAL : EQUAL); break;
+            case '!': AddToken(Match('=') ? BANG_EQUAL : BANG); break;
+            case '>': AddToken(Match('=') ? GREATER_EQUAL : GREATER); break;
+            case '<': AddToken(Match('=') ? LESS_EQUAL : LESS); break;
             case '/':
                 if (Match('/')) // ignore comments. proceed to the end of the comment
                     while (Peek() != '\n' && !IsAtEnd()) Advance();
-                else
-                    AddToken(F_SLASH);
+                else if (Match('*')) ParseMultilineComment();
+                else AddToken(F_SLASH);
                 break;
             // ignore whitespace
             case ' ': case '\t': case '\r': break;
@@ -103,7 +95,7 @@ public class Lexer
             case '"': ParseStringToken(); break;
             default:
                 if (IsDigit(c)) ParseNumberToken();
-                if (IsAlpha(c)) ParseIdentifierToken();
+                else if (IsAlpha(c)) ParseIdentifierToken();
                 else Program.Error(_line, "Unexpected character.");
                 break;
         }
@@ -181,6 +173,25 @@ public class Lexer
 
         var text = _source.Substring(_start, _current - _start);
         AddToken(Keywords.TryGetValue(text, out var value) ? value : IDENTIFIER);
+    }
+
+    /// <summary>
+    /// Parses a multiline comment /* comment */
+    /// </summary>
+    private void ParseMultilineComment()
+    {
+        while (!IsAtEnd())
+        {
+            if (Peek() == '*' && PeekNext() == '/')
+            {
+                Advance();
+                break;
+            }
+            if (Peek() == '\n') _line += 1;
+            Advance();
+        }
+
+        Advance();
     }
 
     /// <summary>

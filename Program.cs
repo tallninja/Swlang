@@ -74,6 +74,12 @@ internal abstract class Program
         ReportError(line, string.Empty, message);
     }
 
+    public static void Error(Token token, string message)
+    {
+        if (token.Type == TokenType.EOF) ReportError(token.Line, "at end", message);
+        else ReportError(token.Line,  $"at '{token.Lexeme}'", message);
+    }
+
     private static void ReportError(int line, string where, string message)
     {
         Console.Error.WriteLine($"[line {line}] Error {where} {message}");

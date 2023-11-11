@@ -43,7 +43,7 @@ public class Unary : Expression
 
 public class Literal : Expression
 {
-    public Literal(object value)
+    public Literal(object? value)
     {
         Value = value;
     }

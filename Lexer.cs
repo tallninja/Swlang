@@ -24,12 +24,12 @@ public class Lexer
     /// <summary>
     /// This points to the first character of the lexeme that is being scanned
     /// </summary>
-    private int _start = 0;
+    private int _start;
 
     /// <summary>
     /// This points to the character currently being considered
     /// </summary>
-    private int _current = 0;
+    private int _current;
 
     /// <summary>
     /// Tracks what source line current is on

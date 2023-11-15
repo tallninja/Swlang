@@ -152,7 +152,7 @@ public class Lexer
         while (IsDigit(Peek())) Advance();
 
         // look for a decimal
-        if (Peek() == '.' && IsDigit(PeekNext()))
+        if (Peek() == '.' && IsDigit(Peek(1)))
         {
             Advance();
             while (IsDigit(Peek())) Advance();
@@ -183,7 +183,7 @@ public class Lexer
     {
         while (!IsAtEnd())
         {
-            if (Peek() == '*' && PeekNext() == '/')
+            if (Peek() == '*' && Peek(1) == '/')
             {
                 Advance();
                 break;
@@ -198,19 +198,11 @@ public class Lexer
     /// <summary>
     /// Used to look/peek at the next character.
     /// </summary>
+    /// <param name="ahead">Number of characters to peek ahead</param>
     /// <returns>The next character. If at the end returns null terminator</returns>
-    private char Peek()
+    private char Peek(int ahead = 0)
     {
-        return IsAtEnd() ? '\0' : _source[_current];
-    }
-
-    /// <summary>
-    /// Peeks at the next character after the current character pointer
-    /// </summary>
-    /// <returns>The character immediately after the current character</returns>
-    private char PeekNext()
-    {
-        return _current + 1 > _source.Length ? '\0' : _source[_current + 1];
+        return _current + ahead > _source.Length ? '\0' : _source[_current];
     }
 
     /// <summary>

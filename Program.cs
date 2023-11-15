@@ -7,10 +7,10 @@ namespace Swlang;
 internal abstract class Program
 {
     private static bool _errorOccured;
-    private static bool _runtimeErrorOcurred;
+    private static bool _runtimeErrorOccurred;
     private static Logger _log = new();
 
-    private static readonly Interpreter _interpreter = new();
+    private static readonly Interpreter Interpreter = new();
 
     public static void Main(string[] args)
     {
@@ -53,7 +53,7 @@ internal abstract class Program
             Run(streamReader.ReadToEnd());
 
             if (_errorOccured) Environment.Exit(65);
-            if (_runtimeErrorOcurred) Environment.Exit(72);
+            if (_runtimeErrorOccurred) Environment.Exit(72);
         }
         catch (Exception exception)
         {
@@ -75,7 +75,7 @@ internal abstract class Program
 
         var parser = new Parser(tokens);
         var statements = parser.Parse();
-        _interpreter.Interpret(statements);
+        Interpreter.Interpret(statements);
 
         // if error occured stop execution
         if (_errorOccured) return;
@@ -90,19 +90,19 @@ internal abstract class Program
 
     public static void Error(Token token, string message)
     {
-        if (token.Type == TokenType.EOF) ReportError(token.Line, "at end", message);
-        else ReportError(token.Line,  $"at '{token.Lexeme}'", message);
+        if (token.Type == TokenType.EOF) ReportError(token.Line, "mwishoni", message);
+        else ReportError(token.Line,  $"katika '{token.Lexeme}'", message);
     }
 
     public static void RuntimeError(RuntimeError error)
     {
-        Console.WriteLine($"{error.Message} \n[line {error.Token.Line}]");
-        _runtimeErrorOcurred = true;
+        Console.WriteLine($"{error.Message} \n[mstari {error.Token.Line}]");
+        _runtimeErrorOccurred = true;
     }
 
     private static void ReportError(int line, string where, string message)
     {
-        Console.Error.WriteLine($"[line {line}] Error {where} {message}");
+        Console.Error.WriteLine($"[mstari {line}] kosa {where} {message}");
         _errorOccured = true;
     }
 

@@ -12,6 +12,6 @@ public class Variables
     public object Get(Token name)
     {
         if (_variables.TryGetValue(name.Lexeme, out var variable)) return variable;
-        throw new RuntimeError(name, $"Undefined variable {name.Lexeme}.");
+        throw new RuntimeError(name, $"Chombo {name.Lexeme} hakijabainishwa.");
     }
 }

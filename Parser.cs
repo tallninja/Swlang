@@ -1,4 +1,5 @@
 using static Swlang.TokenType;
+using static Swlang.ErrorMessages;
 
 namespace Swlang;
 
@@ -42,14 +43,14 @@ public class Parser
     private StatementType PrintStatement()
     {
         var value = Expression();
-        Consume(SEMICOLON, "Expect ';' after statement.");
+        Consume(SEMICOLON, ExpectSemicolonAfterStatement);
         return new PrintStatement(value);
     }
 
     private StatementType ExpressionStatement()
     {
         var value = Expression();
-        Consume(SEMICOLON, "Expect ';' after expression.");
+        Consume(SEMICOLON, ExpectSemicolonAfterExpression);
         return new ExpressionStatement(value);
     }
 
@@ -67,7 +68,7 @@ public class Parser
 
     private StatementType VarDeclaration()
     {
-        var name = Consume(IDENTIFIER, "Expect variable name");
+        var name = Consume(IDENTIFIER, ExpectVariableName);
 
         ExpressionType? initializer = null;
         if (Match(EQUAL))
@@ -75,7 +76,7 @@ public class Parser
             initializer = Expression();
         }
 
-        Consume(SEMICOLON, "Expect ';' after variable declaration.");
+        Consume(SEMICOLON, ExpectSemicolonAfterVariableDeclaration);
         return new VariableDeclarationStatement(name, initializer);
     }
 
@@ -195,7 +196,7 @@ public class Parser
         if (Match(L_PAREN))
         {
             var expression = Expression();
-            Consume(R_PAREN, "Expect ')' after expressionType.");
+            Consume(R_PAREN, ExpectClosingParenAfterExpression);
             return new Grouping(expression);
         }
 

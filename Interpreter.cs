@@ -5,6 +5,7 @@ namespace Swlang;
 
 public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object?>
 {
+    private readonly Variables _variables = new ();
 
     public void Interpret(List<StatementType> statements)
     {
@@ -82,6 +83,11 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
         };
     }
 
+    public object? Visit(Variable expresion)
+    {
+        return _variables.Get(expresion.Name);
+    }
+
     public object? Visit(Grouping expression)
     {
         return Evaluate(expression.Expression);
@@ -102,6 +108,17 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
     {
         var value = Evaluate(statement.Expression);
         Console.WriteLine(value);
+        return null;
+    }
+
+    public object? Visit(VariableDeclarationStatement statement)
+    {
+        object? value = null;
+        if (statement.Initializer is not null)
+        {
+            value = Evaluate(statement.Initializer);
+        }
+        _variables.Define(statement.Name.Lexeme, value!);
         return null;
     }
 

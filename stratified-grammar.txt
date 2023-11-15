@@ -10,4 +10,4 @@ factor -> unary ( ( "*" | "/" ) unary )*
 
 unary -> ( "!" | "-" ) unary | primary
 
-primary ->  NUMBER | STRING | TRUE | FALSE | NULL | "(" expression ")"
+primary ->  NUMBER | STRING | TRUE | FALSE | NULL | "(" expression ")" | IDENTIFIER

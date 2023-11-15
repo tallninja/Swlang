@@ -41,6 +41,20 @@ public class Unary : ExpressionType
     }
 }
 
+public class Variable : ExpressionType
+{
+    public Variable(Token name)
+    {
+        Name = name;
+    }
+
+    public Token Name { get; init; }
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
+}
+
 public class Grouping : ExpressionType
 {
     public Grouping(ExpressionType expressionType)

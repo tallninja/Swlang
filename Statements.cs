@@ -34,3 +34,19 @@ public class PrintStatement : StatementType
         return visitor.Visit(this);
     }
 }
+
+public class VariableDeclarationStatement : StatementType
+{
+    public VariableDeclarationStatement(Token name, ExpressionType? initializer)
+    {
+        Name = name;
+        Initializer = initializer;
+    }
+
+    public Token Name { get; init; }
+    public ExpressionType? Initializer { get; init; }
+    public override T Accept<T>(IStatementVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
+}

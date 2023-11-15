@@ -26,7 +26,7 @@ public class Parser
 
         while (!IsAtEnd())
         {
-            statements.Add(Statement());
+            statements.Add(Declaration()!);
         }
 
         return statements;
@@ -51,6 +51,32 @@ public class Parser
         var value = Expression();
         Consume(SEMICOLON, "Expect ';' after expression.");
         return new ExpressionStatement(value);
+    }
+
+    private StatementType? Declaration()
+    {
+        try
+        {
+            return Match(VAR) ? VarDeclaration() : Statement();
+        }
+        catch (ParserError)
+        {
+            return null;
+        }
+    }
+
+    private StatementType VarDeclaration()
+    {
+        var name = Consume(IDENTIFIER, "Expect variable name");
+
+        ExpressionType? initializer = null;
+        if (Match(EQUAL))
+        {
+            initializer = Expression();
+        }
+
+        Consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new VariableDeclarationStatement(name, initializer);
     }
 
     /// <summary>
@@ -171,6 +197,11 @@ public class Parser
             var expression = Expression();
             Consume(R_PAREN, "Expect ')' after expressionType.");
             return new Grouping(expression);
+        }
+
+        if (Match(IDENTIFIER))
+        {
+            return new Variable(Previous());
         }
 
         return Expression();

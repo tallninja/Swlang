@@ -35,8 +35,7 @@ internal abstract class Program
 
         while (true)
         {
-            Console.WriteLine();
-            Console.Write(Prompt);
+            ShowPrompt();
             var line = Console.In.ReadLine();
             if (line is null) break;
             Run(line);

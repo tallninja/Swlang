@@ -1,3 +1,5 @@
+using static Swlang.Constants;
+
 namespace Swlang;
 
 public abstract class Utils
@@ -17,6 +19,14 @@ public abstract class Utils
         Console.WriteLine();
         PrintCenteredAsciiArt(_asciiArt, leftMargin);
         Console.WriteLine();
+    }
+
+    public static void ShowPrompt()
+    {
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write(Prompt);
+        Console.ForegroundColor = ConsoleColor.White;
     }
 
     private static void PrintCenteredAsciiArt(string asciiArt, int leftMargin)

@@ -54,6 +54,7 @@ public class Lexer
             ScanToken();
         }
 
+        _tokens.Add(new Token(EOF, "", null, _line));
         return _tokens;
     }
 

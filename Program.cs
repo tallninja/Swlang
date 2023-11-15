@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using static Swlang.Constants;
+using static Swlang.Utils;
 
 namespace Swlang;
 
@@ -30,8 +31,11 @@ internal abstract class Program
 
     private static void RunPrompt()
     {
+        PrintAsciiArt();
+
         while (true)
         {
+            Console.WriteLine();
             Console.Write(Prompt);
             var line = Console.In.ReadLine();
             if (line is null) break;
@@ -63,17 +67,20 @@ internal abstract class Program
     {
         var lexer = new Lexer(sourceCode);
         var tokens = lexer.Scan();
-        var parser = new Parser(tokens);
-        var expression = parser.Parse();
-        _interpreter.Interpret(expression!);
-
-        // if error occured stop execution
-        if (_errorOccured) return;
 
         // foreach (var token in tokens)
         // {
         //     Console.WriteLine(token);
         // }
+
+        var parser = new Parser(tokens);
+        var statements = parser.Parse();
+        _interpreter.Interpret(statements);
+
+        // if error occured stop execution
+        if (_errorOccured) return;
+
+
     }
 
     public static void Error(int line, string message)

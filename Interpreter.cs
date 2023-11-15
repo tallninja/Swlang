@@ -6,12 +6,14 @@ namespace Swlang;
 public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object?>
 {
 
-    public void Interpret(ExpressionType expression)
+    public void Interpret(List<StatementType> statements)
     {
         try
         {
-            var value = Evaluate(expression);
-            Console.WriteLine(value);
+            foreach (var statement in statements)
+            {
+                Execute(statement);
+            }
         }
         catch (RuntimeError error)
         {
@@ -106,6 +108,11 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
     private object? Evaluate(ExpressionType expression)
     {
         return expression.Accept(this);
+    }
+
+    private void Execute(StatementType statement)
+    {
+        statement.Accept(this);
     }
 
     private static bool IsBoolean(object? value)

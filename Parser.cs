@@ -20,16 +20,16 @@ public class Parser
         _tokens = tokens;
     }
 
-    public ExpressionType? Parse()
+    public List<StatementType> Parse()
     {
-        try
+        var statements = new List<StatementType>();
+
+        while (!IsAtEnd())
         {
-            return Expression();
+            statements.Add(Statement());
         }
-        catch (ParserError)
-        {
-            return null;
-        }
+
+        return statements;
     }
 
     private StatementType Statement()

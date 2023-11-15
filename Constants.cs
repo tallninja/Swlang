@@ -4,7 +4,7 @@ namespace Swlang;
 
 public abstract class Constants
 {
-    public static string Prompt => "swalang >> ";
+    public static string Prompt => "swlang >> ";
     public static string Usage => "Usage: swalang [script]";
 
     public static Dictionary<string, TokenType> Keywords => new()

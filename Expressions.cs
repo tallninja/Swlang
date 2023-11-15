@@ -1,22 +1,22 @@
 namespace Swlang;
 
-public abstract class Expression
+public abstract class ExpressionType
 {
     public abstract T Accept<T>(IExpressionVisitor<T> visitor);
 }
 
-public class Binary : Expression
+public class Binary : ExpressionType
 {
-    public Binary(Expression leftOperand, Token @operator, Expression rightOperand)
+    public Binary(ExpressionType leftOperand, Token @operator, ExpressionType rightOperand)
     {
         LeftOperand = leftOperand;
         Operator = @operator;
         RightOperand = rightOperand;
     }
 
-    public Expression LeftOperand { get; init; }
+    public ExpressionType LeftOperand { get; init; }
     public Token Operator { get; init; }
-    public Expression RightOperand { get; init; }
+    public ExpressionType RightOperand { get; init; }
 
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
@@ -24,16 +24,16 @@ public class Binary : Expression
     }
 }
 
-public class Unary : Expression
+public class Unary : ExpressionType
 {
-    public Unary(Token @operator, Expression expression)
+    public Unary(Token @operator, ExpressionType rightOperand)
     {
         Operator = @operator;
-        Expression = expression;
+        RightOperand = rightOperand;
     }
 
     public Token Operator { get; init; }
-    public Expression Expression { get; init; }
+    public ExpressionType RightOperand { get; init; }
 
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {
@@ -41,7 +41,22 @@ public class Unary : Expression
     }
 }
 
-public class Literal : Expression
+public class Grouping : ExpressionType
+{
+    public Grouping(ExpressionType expressionType)
+    {
+        Expression = expressionType;
+    }
+
+    public ExpressionType Expression { get; init; }
+
+    public override T Accept<T>(IExpressionVisitor<T> visitor)
+    {
+        return visitor.Visit(this);
+    }
+}
+
+public class Literal : ExpressionType
 {
     public Literal(object? value)
     {
@@ -49,21 +64,6 @@ public class Literal : Expression
     }
     
     public object? Value { get; init; }
-
-    public override T Accept<T>(IExpressionVisitor<T> visitor)
-    {
-        return visitor.Visit(this);
-    }
-}
-
-public class Grouping : Expression
-{
-    public Grouping(Expression expression)
-    {
-        Expression = expression;
-    }
-
-    public Expression Expression { get; init; }
 
     public override T Accept<T>(IExpressionVisitor<T> visitor)
     {

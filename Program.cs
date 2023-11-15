@@ -6,7 +6,10 @@ namespace Swlang;
 internal abstract class Program
 {
     private static bool _errorOccured;
+    private static bool _runtimeErrorOcurred;
     private static Logger _log = new();
+
+    private static readonly Interpreter _interpreter = new();
 
     public static void Main(string[] args)
     {
@@ -45,10 +48,8 @@ internal abstract class Program
             var streamReader = new StreamReader(sourceFile, Encoding.UTF8);
             Run(streamReader.ReadToEnd());
 
-            if (_errorOccured)
-            {
-                Environment.Exit(65);
-            }
+            if (_errorOccured) Environment.Exit(65);
+            if (_runtimeErrorOcurred) Environment.Exit(72);
         }
         catch (Exception exception)
         {
@@ -62,11 +63,17 @@ internal abstract class Program
     {
         var lexer = new Lexer(sourceCode);
         var tokens = lexer.Scan();
+        var parser = new Parser(tokens);
+        var expression = parser.Parse();
+        _interpreter.Interpret(expression!);
 
-        foreach (var token in tokens)
-        {
-            Console.WriteLine(token);
-        }
+        // if error occured stop execution
+        if (_errorOccured) return;
+
+        // foreach (var token in tokens)
+        // {
+        //     Console.WriteLine(token);
+        // }
     }
 
     public static void Error(int line, string message)
@@ -78,6 +85,12 @@ internal abstract class Program
     {
         if (token.Type == TokenType.EOF) ReportError(token.Line, "at end", message);
         else ReportError(token.Line,  $"at '{token.Lexeme}'", message);
+    }
+
+    public static void RuntimeError(RuntimeError error)
+    {
+        Console.WriteLine($"{error.Message} \n[line {error.Token.Line}]");
+        _runtimeErrorOcurred = true;
     }
 
     private static void ReportError(int line, string where, string message)

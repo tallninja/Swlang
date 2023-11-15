@@ -20,11 +20,44 @@ public class Parser
         _tokens = tokens;
     }
 
+    public ExpressionType? Parse()
+    {
+        try
+        {
+            return Expression();
+        }
+        catch (ParserError)
+        {
+            return null;
+        }
+    }
+
+    private StatementType Statement()
+    {
+        return Match(PRINT)
+            ? PrintStatement()
+            : ExpressionStatement();
+    }
+
+    private StatementType PrintStatement()
+    {
+        var value = Expression();
+        Consume(SEMICOLON, "Expect ';' after statement.");
+        return new PrintStatement(value);
+    }
+
+    private StatementType ExpressionStatement()
+    {
+        var value = Expression();
+        Consume(SEMICOLON, "Expect ';' after expression.");
+        return new ExpressionStatement(value);
+    }
+
     /// <summary>
-    /// expression -> equality
+    /// expressionType -> equality
     /// </summary>
-    /// <returns>Equality expression <see cref="Equality"/></returns>
-    private Expression Expression()
+    /// <returns>Equality expressionType <see cref="Equality"/></returns>
+    private ExpressionType Expression()
     {
         return Equality();
     }
@@ -32,8 +65,8 @@ public class Parser
     /// <summary>
     /// equality -> comparison ( ( "==" | "!=" ) comparison )*
     /// </summary>
-    /// <returns>Equality expression <see cref="Expression"/></returns>
-    private Expression Equality()
+    /// <returns>Equality expressionType <see cref="Expression"/></returns>
+    private ExpressionType Equality()
     {
         var expression = Comparison();
 
@@ -50,8 +83,8 @@ public class Parser
     /// <summary>
     /// comparison -&gt; term ( ( "&lt;" | "&gt;" | "&lt;=" | "&gt;=" ) term )*
     /// </summary>
-    /// <returns>Term expression <see cref="Term"/></returns>
-    private Expression Comparison()
+    /// <returns>Term expressionType <see cref="Term"/></returns>
+    private ExpressionType Comparison()
     {
         var expression = Term();
 
@@ -68,8 +101,8 @@ public class Parser
     /// <summary>
     /// term -&gt; factor ( ( "+" | "-" ) factor )*
     /// </summary>
-    /// <returns>Factor expression <see cref="Factor"/></returns>
-    private Expression Term()
+    /// <returns>Factor expressionType <see cref="Factor"/></returns>
+    private ExpressionType Term()
     {
         var expression = Factor();
 
@@ -86,8 +119,8 @@ public class Parser
     /// <summary>
     /// factor -&gt; unary ( ( "*" | "/" ) unary )*
     /// </summary>
-    /// <returns>Unary expression <see cref="Unary"/></returns>
-    private Expression Factor()
+    /// <returns>Unary expressionType <see cref="Unary"/></returns>
+    private ExpressionType Factor()
     {
         var expression = Unary();
 
@@ -105,10 +138,10 @@ public class Parser
     /// unary -&gt; ( "!" | "-" ) unary | primary
     /// </summary>
     /// <returns>
-    /// Unary expression if the current token is ! or - <see cref="Unary"/>.
-    /// Primary expression otherwise <see cref="Primary"/>
+    /// Unary expressionType if the current token is ! or - <see cref="Unary"/>.
+    /// Primary expressionType otherwise <see cref="Primary"/>
     /// </returns>
-    private Expression Unary()
+    private ExpressionType Unary()
     {
         if (!Match(BANG, MINUS)) return Primary();
         var @operator = Previous();
@@ -118,29 +151,29 @@ public class Parser
     }
 
     /// <summary>
-    /// primary -&gt;  NUMBER | STRING | TRUE | FALSE | NULL | "(" expression ")"
+    /// primary -&gt;  NUMBER | STRING | TRUE | FALSE | NULL | "(" expressionType ")"
     /// </summary>
     /// <returns>
-    /// Literal expression <see cref="Literal"/>
-    /// or Grouping expression <see cref="Grouping"/>
+    /// Literal expressionType <see cref="Literal"/>
+    /// or Grouping expressionType <see cref="Grouping"/>
     /// </returns>
-    private Expression? Primary()
+    private ExpressionType Primary()
     {
         if (Match(TRUE)) return new Literal(true);
         if (Match(FALSE)) return new Literal(false);
         if (Match(NULL)) return new Literal(null);
         if (Match(NUMBER, STRING)) return new Literal(Previous().Literal);
 
-        // After we match an opening ( and parse the expression inside it,
+        // After we match an opening ( and parse the expressionType inside it,
         // we must find a ) token. If we don’t, that’s an error.
         if (Match(L_PAREN))
         {
             var expression = Expression();
-            Consume(R_PAREN, "Expect ')' after expression.");
+            Consume(R_PAREN, "Expect ')' after expressionType.");
             return new Grouping(expression);
         }
 
-        return null;
+        return Expression();
     }
 
     /// <summary>
@@ -229,5 +262,3 @@ public class Parser
         return Peek().Type == EOF;
     }
 }
-
-public class ParserError : ApplicationException {}

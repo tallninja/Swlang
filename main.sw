@@ -1,2 +1,1 @@
-sema "Salamu, Dunia!";
-
+// this is a comment

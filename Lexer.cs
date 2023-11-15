@@ -65,7 +65,7 @@ public class Lexer
     /// </summary>
     private void ScanToken()
     {
-        var c = Advance();
+        var c = Consume();
         switch(c)
         {
             case '(': AddToken(L_PAREN); break;
@@ -86,7 +86,7 @@ public class Lexer
             case '<': AddToken(Match('=') ? LESS_EQUAL : LESS); break;
             case '/':
                 if (Match('/')) // ignore comments. proceed to the end of the comment
-                    while (Peek() != '\n' && !IsAtEnd()) Advance();
+                    while (Peek() != '\n' && !IsAtEnd()) Consume();
                 else if (Match('*')) ParseMultilineComment();
                 else AddToken(F_SLASH);
                 break;
@@ -95,8 +95,8 @@ public class Lexer
             case '\n': _line += 1; break;
             case '"': ParseStringToken(); break;
             default:
-                if (IsDigit(c)) ParseNumberToken();
-                else if (IsAlpha(c)) ParseIdentifierToken();
+                if (char.IsDigit(c)) ParseNumberToken();
+                else if (char.IsLetter(c)) ParseIdentifierToken();
                 else Program.Error(_line, "Unexpected character.");
                 break;
         }
@@ -126,14 +126,14 @@ public class Lexer
         {
             if (Peek() == '\n')
                 _line += 1;
-            Advance();
+            Consume();
         }
 
         if (IsAtEnd())
             Program.Error(_line, "Unterminated string.");
 
         // proceed to the closing "
-        Advance();
+        Consume();
 
         // remove the surrounding quotes
         var startIndex = _start + 1;
@@ -149,13 +149,13 @@ public class Lexer
     /// </summary>
     private void ParseNumberToken()
     {
-        while (IsDigit(Peek())) Advance();
+        while (char.IsDigit(Peek())) Consume();
 
         // look for a decimal
-        if (Peek() == '.' && IsDigit(Peek(1)))
+        if (Peek() == '.' && char.IsDigit(Peek(1)))
         {
-            Advance();
-            while (IsDigit(Peek())) Advance();
+            Consume();
+            while (char.IsDigit(Peek())) Consume();
         }
 
         var numericValue = _source.Substring(_start, _current - _start);
@@ -170,7 +170,7 @@ public class Lexer
     /// </summary>
     private void ParseIdentifierToken()
     {
-        while (IsAlphaNum(Peek())) Advance();
+        while (IsAlphaNum(Peek())) Consume();
 
         var text = _source.Substring(_start, _current - _start);
         AddToken(Keywords.TryGetValue(text, out var value) ? value : IDENTIFIER);
@@ -185,14 +185,14 @@ public class Lexer
         {
             if (Peek() == '*' && Peek(1) == '/')
             {
-                Advance();
+                Consume();
                 break;
             }
             if (Peek() == '\n') _line += 1;
-            Advance();
+            Consume();
         }
 
-        Advance();
+        Consume();
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ public class Lexer
     /// <returns>The next character. If at the end returns null terminator</returns>
     private char Peek(int ahead = 0)
     {
-        return _current + ahead > _source.Length ? '\0' : _source[_current];
+        return _current + ahead >= _source.Length ? '\0' : _source[_current + ahead];
     }
 
     /// <summary>
@@ -223,13 +223,12 @@ public class Lexer
     }
 
     /// <summary>
-    /// Advances the current pointer by one
+    /// Consumes the current character and advances the current pointer
     /// </summary>
     /// <returns>The character at the previous index to the current index</returns>
-    private char Advance()
+    private char Consume()
     {
-        _current += 1;
-        return _source[_current - 1];
+        return _source[_current++];
     }
 
     /// <summary>
@@ -243,33 +242,13 @@ public class Lexer
     }
 
     /// <summary>
-    /// Checks if a character is a digit
-    /// </summary>
-    /// <param name="c">character</param>
-    /// <returns>True if is a digit. False otherwise</returns>
-    private static bool IsDigit(char c)
-    {
-        return c is >= '0' and <= '9';
-    }
-
-    /// <summary>
-    /// Checks is a character is alphabetic
-    /// </summary>
-    /// <param name="c">character</param>
-    /// <returns>True if is alphabetic. False otherwise</returns>
-    private static bool IsAlpha(char c)
-    {
-        return c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or '_';
-    }
-
-    /// <summary>
     /// Checks is a character is alphanumeric
     /// </summary>
     /// <param name="c">character</param>
     /// <returns>True if is alphanumeric. False otherwise</returns>
     private static bool IsAlphaNum(char c)
     {
-        return IsAlpha(c) || IsDigit(c);
+        return char.IsLetter(c) || char.IsDigit(c);
     }
 
 }

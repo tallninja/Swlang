@@ -1,14 +1,14 @@
 ﻿using System.Text;
-using static Swlang.Constants;
-using static Swlang.Utils;
+using static Swlang.Interpreter.Constants;
+using static Swlang.Interpreter.Utils;
 
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 internal abstract class Program
 {
     private static bool _errorOccured;
     private static bool _runtimeErrorOccurred;
-    private static Logger _log = new();
+    private static readonly Logger Log = new();
 
     private static readonly Interpreter Interpreter = new();
 
@@ -23,7 +23,7 @@ internal abstract class Program
                 RunFile(args[0]);
                 break;
             default:
-                _log.Info(Usage);
+                Log.Info(Usage);
                 Environment.Exit(1);
                 break;
         }
@@ -56,30 +56,25 @@ internal abstract class Program
         }
         catch (Exception exception)
         {
-            _log.Error(exception.Message);
+            Log.Error(exception.Message);
             Environment.Exit(65);
         }
-
     }
 
     private static void Run(string sourceCode)
     {
+        // Lexing
         var lexer = new Lexer(sourceCode);
         var tokens = lexer.Scan();
 
-        // foreach (var token in tokens)
-        // {
-        //     Console.WriteLine(token);
-        // }
-
+        // Scanning
         var parser = new Parser(tokens);
         var statements = parser.Parse();
+
         Interpreter.Interpret(statements);
 
         // if error occured stop execution
         if (_errorOccured) return;
-
-
     }
 
     public static void Error(int line, string message)

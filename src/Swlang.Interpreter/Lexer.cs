@@ -1,6 +1,7 @@
-namespace Swlang;
-using static TokenType;
-using static Constants;
+using static Swlang.Interpreter.TokenType;
+using static Swlang.Interpreter.Constants;
+
+namespace Swlang.Interpreter;
 
 /// <summary>
 /// This class is used to scan through the source code
@@ -51,7 +52,7 @@ public class Lexer
         while (!IsAtEnd())
         {
             _start = _current;
-            ScanToken();
+            ScanTokens();
         }
 
         _tokens.Add(new Token(EOF, "", null, _line));
@@ -63,7 +64,7 @@ public class Lexer
     /// For ever loop through the characters it advances the current
     /// pointer by 1
     /// </summary>
-    private void ScanToken()
+    private void ScanTokens()
     {
         var c = Consume();
         switch(c)

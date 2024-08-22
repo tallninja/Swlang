@@ -1,6 +1,6 @@
-using static Swlang.Constants;
+using static Swlang.Interpreter.Constants;
 
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 public abstract class Utils
 {

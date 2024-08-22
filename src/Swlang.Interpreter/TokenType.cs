@@ -1,5 +1,5 @@
 // ReSharper disable InconsistentNaming
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 public enum TokenType
 {

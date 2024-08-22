@@ -1,4 +1,4 @@
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 public class ParserError : Exception {}
 

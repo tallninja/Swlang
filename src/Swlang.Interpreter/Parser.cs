@@ -1,7 +1,7 @@
-using static Swlang.TokenType;
-using static Swlang.ErrorMessages;
+using static Swlang.Interpreter.TokenType;
+using static Swlang.Interpreter.ErrorMessages;
 
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 /// <summary>
 /// The Parser is used to parse our tokens from the Lexer.
@@ -21,9 +21,9 @@ public class Parser
         _tokens = tokens;
     }
 
-    public List<StatementType> Parse()
+    public List<StatementType?> Parse()
     {
-        var statements = new List<StatementType>();
+        var statements = new List<StatementType?>();
 
         while (!IsAtEnd())
         {
@@ -31,6 +31,18 @@ public class Parser
         }
 
         return statements;
+    }
+
+    private StatementType? Declaration()
+    {
+        try
+        {
+            return Match(VAR) ? VarDeclaration() : Statement();
+        }
+        catch (ParserError)
+        {
+            return null;
+        }
     }
 
     private StatementType Statement()
@@ -52,18 +64,6 @@ public class Parser
         var value = Expression();
         Consume(SEMICOLON, ExpectSemicolonAfterExpression);
         return new ExpressionStatement(value);
-    }
-
-    private StatementType? Declaration()
-    {
-        try
-        {
-            return Match(VAR) ? VarDeclaration() : Statement();
-        }
-        catch (ParserError)
-        {
-            return null;
-        }
     }
 
     private StatementType VarDeclaration()

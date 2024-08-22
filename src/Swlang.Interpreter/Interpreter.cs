@@ -1,18 +1,18 @@
-using CommandLine;
-using static Swlang.TokenType;
+using static Swlang.Interpreter.TokenType;
 
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object?>
 {
     private readonly Variables _variables = new ();
 
-    public void Interpret(List<StatementType> statements)
+    public void Interpret(List<StatementType?> statements)
     {
         try
         {
             foreach (var statement in statements)
             {
+                if (statement is null) break;
                 Execute(statement);
             }
         }
@@ -20,6 +20,11 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
         {
             Program.RuntimeError(error);
         }
+    }
+
+    private void Execute(StatementType statement)
+    {
+        statement.Accept(this);
     }
 
     public object? Visit(Binary expression)
@@ -77,7 +82,7 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
 
         return @operator.Type switch
         {
-            MINUS => -right.Cast<double>(),
+            MINUS => -(double)right!,
             BANG => IsBoolean(right),
             _ => null
         };
@@ -122,14 +127,14 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
         return null;
     }
 
+    public object? Visit(AssignmentStatement statement)
+    {
+        throw new NotImplementedException();
+    }
+
     private object? Evaluate(ExpressionType expression)
     {
         return expression.Accept(this);
-    }
-
-    private void Execute(StatementType statement)
-    {
-        statement.Accept(this);
     }
 
     private static bool IsBoolean(object? value)
@@ -137,7 +142,7 @@ public class Interpreter : IExpressionVisitor<object?>, IStatementVisitor<object
         return value switch
         {
             null => false,
-            bool => value.Cast<bool>(),
+            bool => (bool)value,
             _ => true
         };
     }

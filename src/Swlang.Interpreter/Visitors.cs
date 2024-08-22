@@ -1,4 +1,4 @@
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 public interface IExpressionVisitor<T>
 {
@@ -14,4 +14,5 @@ public interface IStatementVisitor<T>
     T Visit(ExpressionStatement statement);
     T Visit(PrintStatement statement);
     T Visit(VariableDeclarationStatement statement);
+    T Visit(AssignmentStatement statement);
 }

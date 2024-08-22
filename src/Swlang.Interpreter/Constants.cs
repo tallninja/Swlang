@@ -1,6 +1,6 @@
-using static Swlang.TokenType;
+using static Swlang.Interpreter.TokenType;
 
-namespace Swlang;
+namespace Swlang.Interpreter;
 
 public abstract class Constants
 {
